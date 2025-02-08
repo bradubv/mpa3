@@ -111,20 +111,6 @@ export default defineConfig({
 npx shadcn@canary init
 ```
 
-Sadly this fails with the following output:
-```
-PS C:\dev\mpa3> npx shadcn@canary init    
-✔ Preflight checks.
-✔ Verifying framework. Found Vite.
-✔ Validating Tailwind CSS config. Found v4.
-✖ Validating import alias.
-
-No import alias found in your tsconfig.json file.
-Visit https://ui.shadcn.com/docs/installation/vite to learn how to set an import alias.
-```
-
----everything from here is suspect---
-
 and pick
 Style: Default
 Color: Slate
@@ -144,17 +130,19 @@ npx shadcn@latest add card button
 
 13. Add the code from `claude.ai` to a file in `src/components/TransactionTracker.tsx`
 
-14. Modify your `src/app/page.tsx` to use the component
+14. Modify your `src/App.tsx` to use the component
 ```
-import TransactionTracker from '@/components/TransactionTracker'
+import TransactionTracker from './components/TransactionTracker'
 
-export default function Home() {
+function App() {
   return (
     <main className="min-h-screen p-4">
       <TransactionTracker />
     </main>
   )
 }
+
+export default App
 ```
 
 15. Run the development server with
