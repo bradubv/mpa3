@@ -1,42 +1,38 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-
-interface Transaction {
-  id: number;
-  description: string;
-  amount: number;
-}
+import { TransactionType, Transaction } from '../Transaction'
+import TransactionItem from './TransactionItem'
 
 interface AppliedTransaction extends Transaction {
-  timestamp: Date;
   resultingBalance: number;
+  //TODO: should also calculate resultingPosition
 }
 
 const TransactionTracker: React.FC = () => {
   const [transactions] = useState<Transaction[]>([
-    { id: 1, description: 'Initial Deposit', amount: 1000 },
-    { id: 2, description: 'Rent Payment', amount: -800 },
-    { id: 3, description: 'Salary', amount: 2000 },
-    { id: 4, description: 'Grocery Shopping', amount: -150 },
-    { id: 5, description: 'Utility Bill', amount: -100 },
+    { id: 1, entryDate: new Date(2025, 0, 2), effectiveDate: new Date(2025, 0, 2), type: TransactionType.Crd, security: 'USD', description: '', quantity: 0, amount: 4000 },
+    { id: 2, entryDate: new Date(2025, 0, 3), effectiveDate: new Date(2025, 0, 3), type: TransactionType.Buy, security: 'GOOGL', description: '', quantity: 6, amount: 2000 },
+    { id: 3, entryDate: new Date(2025, 0, 9), effectiveDate: new Date(2025, 0, 9), type: TransactionType.Buy, security: 'AAPL', description: '', quantity: 5, amount: 1000 },
+    { id: 4, entryDate: new Date(2025, 0, 10), effectiveDate: new Date(2025, 0, 10), type: TransactionType.Sell, security: 'GOOGL', description: '', quantity: 3, amount: 1500},
   ]);
 
   const [appliedTransactions, setAppliedTransactions] = useState<AppliedTransaction[]>([]);
   const [balance, setBalance] = useState<number>(0);
   const [highlightedField, setHighlightedField] = useState<string | null>(null);
 
-  const applyTransaction = (transaction: Transaction) => {
-    if (appliedTransactions.some(t => t.id === transaction.id)) return;
+  const applyTransaction = () => {
+    const transaction = transactions.find(t => !appliedTransactions.some(at => at.id === t.id));
+    if (!transaction) return;
 
     const newApplied = [...appliedTransactions, 
-      { ...transaction, timestamp: new Date(), resultingBalance: balance + transaction.amount }
+      { ...transaction, resultingBalance: balance + transaction.amount }
     ];
     setAppliedTransactions(newApplied);
     setBalance(balance + transaction.amount);
     
     setHighlightedField('balance');
-    setTimeout(() => setHighlightedField(null), 1000);
+    setTimeout(() => setHighlightedField(null), 3000);
   };
 
   const resetTransactions = () => {
@@ -51,25 +47,19 @@ const TransactionTracker: React.FC = () => {
           <CardTitle>Pending Transactions</CardTitle>
         </CardHeader>
         <CardContent>
+          <Button 
+            onClick={applyTransaction}
+            variant="primary"
+            className="mt-4"
+          >
+            Apply Transaction
+          </Button>
           <div className="flex flex-col gap-2">
             {transactions.filter(t => !appliedTransactions.some(at => at.id === t.id)).map((transaction) => (
-              <div
-                key={transaction.id}
-                className="flex items-center justify-between p-2 border rounded"
-              >
-                <div>
-                  <div className="font-medium">{transaction.description}</div>
-                  <div className={transaction.amount >= 0 ? 'text-green-600' : 'text-red-600'}>
-                    ${Math.abs(transaction.amount).toFixed(2)}
-                  </div>
-                </div>
-                <Button
-                  onClick={() => applyTransaction(transaction)}
-                  variant="outline"
-                >
-                  Apply
-                </Button>
-              </div>
+              <TransactionItem
+              key={transaction.id}
+              transaction={transaction}
+            />
             ))}
             <Button 
               onClick={resetTransactions}
@@ -103,25 +93,11 @@ const TransactionTracker: React.FC = () => {
               <div className="font-medium mb-2">Transaction History</div>
               <div className="space-y-2">
                 {appliedTransactions.slice().reverse().map((transaction) => (
-                  <div
+                  <TransactionItem
                     key={transaction.id}
-                    className="p-2 border rounded flex justify-between items-center"
-                  >
-                    <div>
-                      <div className="font-medium">{transaction.description}</div>
-                      <div className="text-sm text-gray-500">
-                        {transaction.timestamp.toLocaleTimeString()}
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className={transaction.amount >= 0 ? 'text-green-600' : 'text-red-600'}>
-                        ${Math.abs(transaction.amount).toFixed(2)}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        Balance: ${transaction.resultingBalance.toFixed(2)}
-                      </div>
-                    </div>
-                  </div>
+                    transaction={transaction}
+                    resultingBalance={transaction.resultingBalance}
+                  />
                 ))}
               </div>
             </div>
