@@ -3,8 +3,6 @@ import { Transaction, TransactionType } from '../Transaction';
 
 interface TransactionItemProps {
   transaction: Transaction;
-  onApply?: () => void;
-  showApplyButton?: boolean;
   resultingBalance?: number;
 }
 

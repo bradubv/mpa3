@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { TransactionType, Transaction } from '../Transaction'
 import TransactionItem from './TransactionItem'
+import Balance from './Balance';
 
 interface AppliedTransaction extends Transaction {
   resultingBalance: number;
@@ -78,17 +79,10 @@ const TransactionTracker: React.FC = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div
-              className={`p-4 border rounded transition-colors duration-300 ${
-                highlightedField === 'balance' ? 'bg-blue-100' : 'bg-white'
-              }`}
-            >
-              <div className="font-medium">Current Balance</div>
-              <div className={balance >= 0 ? 'text-green-600' : 'text-red-600'}>
-                ${balance.toFixed(2)}
-              </div>
-            </div>
-
+            <Balance
+              highlightedField={highlightedField}
+              balance={balance}
+            />
             <div className="mt-6">
               <div className="font-medium mb-2">Transaction History</div>
               <div className="space-y-2">
