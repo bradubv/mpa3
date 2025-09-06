@@ -4,11 +4,13 @@ import { Transaction, TransactionType } from '../Transaction';
 interface TransactionItemProps {
   transaction: Transaction;
   resultingBalance?: number;
+  resultingQuantity?: number;
 }
 
 const TransactionItem: React.FC<TransactionItemProps> = ({
   transaction,
   resultingBalance,
+  resultingQuantity,
 }) => {
   return (
     <div className="flex items-center justify-between p-2 border rounded">
@@ -26,6 +28,13 @@ const TransactionItem: React.FC<TransactionItemProps> = ({
         <div className="text-right">
           <div className="text-sm text-gray-500">
             Balance: ${resultingBalance.toFixed(2)}
+          </div>
+        </div>
+      )}
+      {resultingQuantity !== undefined && (
+        <div className="text-right">
+          <div className="text-sm text-gray-500">
+            Quantity: {resultingQuantity}
           </div>
         </div>
       )}

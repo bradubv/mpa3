@@ -156,3 +156,14 @@ npm run dev
 * ESLint
 * Prettier - Code formatter
 * PostCSS Language Support (different author csstools rather than Chen Xizhou)
+
+
+## TODO
+1. Add Positions to Account State
+1. Add Undo to Processed Transactions
+1. Fix ugliness of additional processed transactions attributes
+1. Add old quantity and old balance to processed transactions
+1. Move reset all button to Processed Transactions and call it just reset or undo all.
+1. Instead of an apply transaction button, if I click on a transction all the transaction up to that point should be processed.
+
+## DONE
